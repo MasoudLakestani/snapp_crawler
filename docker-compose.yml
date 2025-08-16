@@ -28,6 +28,14 @@ services:
       - blackeveryday_network
     restart: unless-stopped
 
+  snapp-product-3:
+    build: .
+    environment:
+      - SPIDER_NAME=snappProduct
+    networks:
+      - blackeveryday_network
+    restart: unless-stopped
+
 networks:
   blackeveryday_network:
     external: true
