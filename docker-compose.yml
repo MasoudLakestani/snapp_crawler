@@ -25,7 +25,7 @@ services:
     environment:
       - SPIDER_NAME=snappProduct
     networks:
-      - scrapy-blackeveryday_network
+      - blackeveryday_network
     restart: unless-stopped
 
 networks:
