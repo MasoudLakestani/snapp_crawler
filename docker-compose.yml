@@ -6,10 +6,8 @@ services:
     build: .
     environment:
       - SPIDER_NAME=snappNewProduct
-    depends_on:
-      - redis
     networks:
-      - scrapy-network
+      - blackeveryday_network
     restart: unless-stopped
 
   # First instance running snappProduct spider
@@ -17,10 +15,8 @@ services:
     build: .
     environment:
       - SPIDER_NAME=snappProduct
-    depends_on:
-      - redis
     networks:
-      - scrapy-network
+      - blackeveryday_network
     restart: unless-stopped
 
   # Second instance running snappProduct spider
@@ -28,12 +24,10 @@ services:
     build: .
     environment:
       - SPIDER_NAME=snappProduct
-    depends_on:
-      - redis
     networks:
-      - scrapy-network
+      - scrapy-blackeveryday_network
     restart: unless-stopped
 
 networks:
-  scrapy-network:
-    driver: bridge
+  blackeveryday_network:
+    external: true
