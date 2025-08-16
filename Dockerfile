@@ -9,15 +9,12 @@ RUN apt-get update && apt-get install -y \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Poetry
-RUN pip install poetry
+COPY pyproject.toml poetry.lock* ./
 
-# Copy poetry files
-COPY pyproject.toml poetry.lock ./
-
-# Configure poetry: Don't create virtual environment, install dependencies
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev --no-interaction --no-ansi
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry lock && \
+    poetry install --no-root
 
 # Copy project files
 COPY . .
