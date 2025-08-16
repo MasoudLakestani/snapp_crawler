@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Single instance running snappNewProduct spider
+  snapp-new-product:
+    build: .
+    environment:
+      - SPIDER_NAME=snappNewProduct
+    depends_on:
+      - redis
+    networks:
+      - scrapy-network
+    restart: unless-stopped
+
+  # First instance running snappProduct spider
+  snapp-product-1:
+    build: .
+    environment:
+      - SPIDER_NAME=snappProduct
+    depends_on:
+      - redis
+    networks:
+      - scrapy-network
+    restart: unless-stopped
+
+  # Second instance running snappProduct spider
+  snapp-product-2:
+    build: .
+    environment:
+      - SPIDER_NAME=snappProduct
+    depends_on:
+      - redis
+    networks:
+      - scrapy-network
+    restart: unless-stopped
+
+networks:
+  scrapy-network:
+    driver: bridge

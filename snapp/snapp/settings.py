@@ -23,8 +23,18 @@ ROBOTSTXT_OBEY = False
 
 # Concurrency and throttling settings
 #CONCURRENT_REQUESTS = 16
-CONCURRENT_REQUESTS_PER_DOMAIN = 1
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0
+
+# Concurrency settings
+CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS_PER_DOMAIN = 32
+
+# Enable AutoThrottle for adaptive speed control
+AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_START_DELAY = 0.1         
+AUTOTHROTTLE_MAX_DELAY = 3              
+AUTOTHROTTLE_TARGET_CONCURRENCY = 8.0   #
+AUTOTHROTTLE_DEBUG = False
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
@@ -95,8 +105,8 @@ LOG_LEVEL = "ERROR"
 # REDIS_START_URLS_KEY = '%(name)s:start_urls'
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
 DUPEFILTER_CLASS = "snapp.dupefilter.NoDupeFilter"
-# REDIS_URL = 'redis://:rv6e7hya18nPA@62.106.95.202:6379'
-REDIS_URL = 'redis://localhost:6379'
+REDIS_URL = 'redis://:rv6e7hya18nPA@62.106.95.202:6379'
+# REDIS_URL = 'redis://localhost:6379'
 SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.FifoQueue'
 MAX_IDLE_TIME_BEFORE_CLOSE = 3600 * 30
 
