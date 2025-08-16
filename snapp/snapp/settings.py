@@ -23,11 +23,11 @@ ROBOTSTXT_OBEY = False
 
 # Concurrency and throttling settings
 #CONCURRENT_REQUESTS = 16
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0.5
 
 # Concurrency settings
-CONCURRENT_REQUESTS = 5
-CONCURRENT_REQUESTS_PER_DOMAIN = 5
+CONCURRENT_REQUESTS = 10
+CONCURRENT_REQUESTS_PER_DOMAIN = 10
 
 # Enable AutoThrottle for adaptive speed control
 AUTOTHROTTLE_ENABLED = True

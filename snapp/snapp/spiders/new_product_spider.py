@@ -40,7 +40,7 @@ class NewProductSpider(RedisSpider):
                         slugs.append(slug)
         
         # Now make requests for each category slug
-        for slug in slugs[0:1]:
+        for slug in slugs:
             yield self.make_category_request(slug, 0)
     
     def make_category_request(self, slug, skip):
