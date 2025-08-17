@@ -70,8 +70,8 @@ class ProductsSpider(RedisSpider):
             product = ProductItem()
             
             # Basic product information
-            product["uuid"] = data.get("id")
-            product["dbid"] = f"snapp-{product['uuid']}"
+            product["uuid"] = response.url.replace("https://apix.snappshop.ir/products/v2/","")
+            product["dbid"] = f"snp-{product['uuid']}"
             
             # Title information from content section
             content = data.get("content", {})
@@ -116,7 +116,7 @@ class ProductsSpider(RedisSpider):
             
             # Image URL - get first image from images array
             images = data.get("images", [])
-            product["image_url"] = images[0].get("src", "") if images else ""
+            product["image_url"] = [images[0].get("src", "") if images else ""]
             
             # Activity status
             variants = data.get("variants", [])
@@ -157,15 +157,19 @@ class ProductsSpider(RedisSpider):
                     # Find cheapest vendor (considering special price if available)
                     cheapest_vendor = min(available_vendors, key=lambda x: x.get("special_price", x.get("price", float("inf"))) or x.get("price", float("inf")))
                     
-                    product["selling_price"] = cheapest_vendor.get("special_price") or cheapest_vendor.get("price")
-                    product["rrp_price"] = cheapest_vendor.get("price")
-                    product["discount_percent"] = cheapest_vendor.get("special_price_percent_discount", 0)
+                    selling_price = cheapest_vendor.get("special_price") or cheapest_vendor.get("price")
+                    rrp_price = cheapest_vendor.get("price")
+                    discount_percent = cheapest_vendor.get("special_price_percent_discount", 0) 
                 else:
                     # No available vendors, use first vendor's price
                     first_vendor = all_vendors[0]
-                    product["selling_price"] = first_vendor.get("special_price") or first_vendor.get("price")
-                    product["rrp_price"] = first_vendor.get("price")
-                    product["discount_percent"] = first_vendor.get("special_price_percent_discount", 0)
+                    selling_price = first_vendor.get("special_price") or first_vendor.get("price") * 10
+                    rrp_price = first_vendor.get("price") * 10
+                    discount_percent = first_vendor.get("special_price_percent_discount", 0)
+
+                product["selling_price"] = selling_price * 10
+                product["rrp_price"] = rrp_price * 10
+                product["discount_percent"] = discount_percent 
             else:
                 product["selling_price"] = None
                 product["rrp_price"] = None
