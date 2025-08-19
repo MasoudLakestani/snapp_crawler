@@ -47,7 +47,7 @@ class NewProductSpider(RedisSpider):
         url = "https://apix.snappshop.ir/landing/v2?lat=35.77331&lng=51.418591"
         payload = {
             "slug": slug,
-            "render": 20,
+            "render": 4,
             "page_type": "category",
             "skip": skip
         }
