@@ -9,7 +9,7 @@ class NewProductSpider(RedisSpider):
     def start_requests(self):
         url = "https://apix.snappshop.ir/landing/v2?lat=35.77331&lng=51.418591"
         payload = {
-            "render": 4,
+            "render": 50,
             "page_type": "categories"
             }
         headers = {'Content-Type': 'application/json'} 
@@ -29,6 +29,7 @@ class NewProductSpider(RedisSpider):
             
         jsonresponse = response.json()
         categories = jsonresponse["data"]["structure"]
+        print(categories)
         
         slugs = []
         for cat in categories:
@@ -47,7 +48,7 @@ class NewProductSpider(RedisSpider):
         url = "https://apix.snappshop.ir/landing/v2?lat=35.77331&lng=51.418591"
         payload = {
             "slug": slug,
-            "render": 4,
+            "render": 50,
             "page_type": "category",
             "skip": skip
         }
