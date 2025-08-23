@@ -1,10 +1,20 @@
 import json
 import scrapy
 import re
+from random import sample
 from scrapy_redis.spiders import RedisSpider
 
 class NewProductSpider(RedisSpider):
     name = "snappNewProduct"
+    ROTATING_PROXY_LIST = [
+        'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.38:6889',
+        'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.42:6889',
+        'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.56:6889',
+        'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.69:6889',
+        'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.75:6889',
+        'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.92:6889',
+        'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.98:6889',
+        ]
     
     def start_requests(self):
         url = "https://apix.snappshop.ir/landing/v2?lat=35.77331&lng=51.418591"
@@ -102,7 +112,8 @@ class NewProductSpider(RedisSpider):
                                 "created_date": None,
                                 "number_of_inactivity": 0,
                                 "user_like": 0,
-                                "user_dislike": 0
+                                "user_dislike": 0,
+                                "proxy": sample(self.ROTATING_PROXY_LIST, 1)[0]
                             }
                         }
                         
