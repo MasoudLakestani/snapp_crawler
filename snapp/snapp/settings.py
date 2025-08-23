@@ -114,6 +114,13 @@ ITEM_PIPELINES = {
    'scrapy_redis.pipelines.RedisPipeline': 200,
 }
 
+DOWNLOADER_MIDDLEWARES = {
+    # ...
+    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+    # ...
+}
+
 ## Tor proxy settings
 TOR_PROXY_ENABLED = True
 
@@ -126,3 +133,17 @@ TOR_PROXY_ENABLED = True
 # AUTOTHROTTLE_ENABLED = True
 # AUTOTHROTTLE_START_DELAY = 1
 # AUTOTHROTTLE_MAX_DELAY = 10
+
+
+ROTATING_PROXY_LIST = [
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.38:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.42:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.56:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.69:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.75:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.92:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.98:6889',
+   #  'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.112:6889',
+   #  'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.160:6889',
+   #  'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.202:6889',
+]
