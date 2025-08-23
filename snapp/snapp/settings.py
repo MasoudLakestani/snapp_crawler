@@ -114,12 +114,12 @@ ITEM_PIPELINES = {
    'scrapy_redis.pipelines.RedisPipeline': 200,
 }
 
-DOWNLOADER_MIDDLEWARES = {
-    # ...
-    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
-    # ...
-}
+# `DOWNLOADER_MIDDLEWARES = {
+#     # ...
+#     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+#     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+#     # ...
+# }`
 
 ## Tor proxy settings
 TOR_PROXY_ENABLED = True
