@@ -91,7 +91,7 @@ class NewProductSpider(RedisSpider):
                     if match:
                         product_id = match.group(1)
                         # Build the API URL
-                        api_url = f"https://apix.snappshop.ir/products/v2/{product_id}"
+                        api_url = f"https://apix.snappshop.ir/products/v2/{product_id}?lat=35.77331&lng=51.418591"
                         
                         # Create request data for Redis
                         request_data = {
