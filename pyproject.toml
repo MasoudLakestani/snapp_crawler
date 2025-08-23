@@ -11,7 +11,8 @@ dependencies = [
     "scrapy (>=2.13.3,<3.0.0)",
     "requests (>=2.32.4,<3.0.0)",
     "scrapy-redis (>=0.9.1,<0.10.0)",
-    "jdatetime (>=5.2.0,<6.0.0)"
+    "jdatetime (>=5.2.0,<6.0.0)",
+    "scrapy-rotating-proxies (>=0.6.2,<0.7.0)"
 ]
 
 
