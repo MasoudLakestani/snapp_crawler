@@ -1,8 +1,9 @@
-import os
+
+import json
 import scrapy
 import logging
 import datetime
-from itertools import cycle
+from random import sample 
 import jdatetime
 from snapp.items import *
 from scrapy.exceptions import DontCloseSpider
@@ -17,22 +18,39 @@ class ProductsSpider(RedisSpider):
     redis_key = 'snappProduct:first_crawl'
 
     def parse(self, response):
+        PROXY_LIST = self.settings.get("ROTATING_PROXY_LIST")
+        price_history = response.meta.get("price_history")
+        request_count = response.meta.get("request_count")
+        created_date = response.meta.get("created_date")
+        number_of_inactivity = response.meta.get("number_of_inactivity")
+        user_like = response.meta.get("user_like")
+        user_dislike = response.meta.get("user_dislike")
+        proxy = response.meta.get("proxy")
+
+        if response.status==429:
+            proxy_list = PROXY_LIST.copy()
+            proxy_list = [x for x in PROXY_LIST if proxy.replace("http://", "") not in x]
+            new_proxy = sample(proxy_list, 1)[0]
+            self.back_to_redis(
+                url=response.url,
+                request_count=request_count,
+                price_history=price_history,
+                created_date=created_date,
+                number_of_inactivity=number_of_inactivity,
+                user_like=user_like,
+                user_dislike=user_dislike,
+                proxy=new_proxy
+            )
         try:
             jsonresponse = response.json()
-            price_history = response.meta.get("price_history")
-            request_count = response.meta.get("request_count")
-            created_date = response.meta.get("created_date")
-            number_of_inactivity = response.meta.get("number_of_inactivity")
-            user_like = response.meta.get("user_like")
-            user_dislike = response.meta.get("user_dislike")
             
-            # Check if response is successful
+
             if not jsonresponse.get("status", False):
-                return
+                raise DontCloseSpider
             
             data = jsonresponse.get("data", {})
             if not data:
-                return
+                raise DontCloseSpider
             
             # Check if product is deactivated or has no ID
             page_info = data.get("page", {})
@@ -61,11 +79,6 @@ class ProductsSpider(RedisSpider):
                             meta=response.meta,
                             dont_filter=True
                         )
-                        return
-                
-                # Product is truly inactive - log and skip
-                self.logger.info(f"Skipping inactive product: {response.url}")
-                return
             
             product = ProductItem()
             
@@ -274,4 +287,28 @@ class ProductsSpider(RedisSpider):
             self.logger.error(f"Error parsing response: {e}")
             self.logger.error(f"Response URL: {response.url}")
             self.logger.error(f"Response status: {response.status}")
-            return
+            raise DontCloseSpider
+    def back_to_redis(
+            self, 
+            url, 
+            request_count, 
+            price_history,
+            created_date,
+            number_of_inactivity,
+            user_like,
+            user_dislike,
+            proxy
+            ):
+        bcked_url = {
+                            "url":url,
+                            "meta":{
+                                "price_history":price_history,        
+                                "request_count": request_count + 1,
+                                "created_date":created_date,
+                                "number_of_inactivity":number_of_inactivity,
+                                "user_like":user_like,
+                                "user_dislike":user_dislike,
+                                "proxy":proxy
+                                }
+                        }
+        self.server.rpush(' snappProduct:first_crawl', json.dumps(bcked_url)) 

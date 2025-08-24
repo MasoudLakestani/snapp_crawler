@@ -26,8 +26,8 @@ ROBOTSTXT_OBEY = False
 DOWNLOAD_DELAY = 0.5
 
 # Concurrency settings
-CONCURRENT_REQUESTS = 10
-CONCURRENT_REQUESTS_PER_DOMAIN = 10
+CONCURRENT_REQUESTS = 5
+CONCURRENT_REQUESTS_PER_DOMAIN = 5
 
 # Enable AutoThrottle for adaptive speed control
 AUTOTHROTTLE_ENABLED = True
@@ -114,12 +114,12 @@ ITEM_PIPELINES = {
    'scrapy_redis.pipelines.RedisPipeline': 200,
 }
 
-# `DOWNLOADER_MIDDLEWARES = {
+# DOWNLOADER_MIDDLEWARES = {
 #     # ...
 #     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
 #     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
 #     # ...
-# }`
+# }'
 
 ## Tor proxy settings
 TOR_PROXY_ENABLED = True
