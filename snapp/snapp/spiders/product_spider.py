@@ -83,7 +83,7 @@ class ProductsSpider(RedisSpider):
             product = ProductItem()
             
             # Basic product information
-            product["uuid"] = response.url.replace("https://apix.snappshop.ir/products/v2/","")
+            product["uuid"] = response.url.replace("https://apix.snappshop.ir/products/v2/","").split("?")[0]
             product["dbid"] = f"snp-{product['uuid']}"
             
             # Title information from content section
