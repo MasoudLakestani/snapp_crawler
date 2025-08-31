@@ -116,7 +116,7 @@ ITEM_PIPELINES = {
 
 # Enable Tor proxy middleware
 DOWNLOADER_MIDDLEWARES = {
-    'digikala.middlewares.TorProxyMiddleware': 585,
+    'snapp.middlewares.TorProxyMiddleware': 585,
 }
 
 ## Tor proxy settings
