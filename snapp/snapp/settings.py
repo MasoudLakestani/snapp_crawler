@@ -23,11 +23,11 @@ ROBOTSTXT_OBEY = False
 
 # Concurrency and throttling settings
 #CONCURRENT_REQUESTS = 16
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0.5
 
 # Concurrency settings
-CONCURRENT_REQUESTS = 1
-CONCURRENT_REQUESTS_PER_DOMAIN = 1
+CONCURRENT_REQUESTS = 10
+CONCURRENT_REQUESTS_PER_DOMAIN = 10
 
 # Enable AutoThrottle for adaptive speed control
 # AUTOTHROTTLE_ENABLED = True
@@ -114,36 +114,23 @@ ITEM_PIPELINES = {
    'scrapy_redis.pipelines.RedisPipeline': 200,
 }
 
-# DOWNLOADER_MIDDLEWARES = {
-#     # ...
-#     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-#     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
-#     # ...
-# }'
+# Enable Tor proxy middleware
+DOWNLOADER_MIDDLEWARES = {
+    'digikala.middlewares.TorProxyMiddleware': 585,
+}
 
 ## Tor proxy settings
 TOR_PROXY_ENABLED = True
 
-# Optional: Disable other proxy middleware to avoid conflicts
-# HTTPPROXY_ENABLED = False
+# IP rotation settings
+TOR_PROXY_CHANGE_AFTER = 500
+TOR_PROXY_ALLOW_REUSE_IP_AFTER = 10
 
-# Recommended: Configure delays to be respectful
-# DOWNLOAD_DELAY = 1
-# RANDOMIZE_DOWNLOAD_DELAY = 0.5
-# AUTOTHROTTLE_ENABLED = True
-# AUTOTHROTTLE_START_DELAY = 1
-# AUTOTHROTTLE_MAX_DELAY = 10
-
-
-ROTATING_PROXY_LIST = [
-    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.38:6889',
-    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.42:6889',
-    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.56:6889',
-    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.69:6889',
-    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.75:6889',
-    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.92:6889',
-    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.98:6889',
-   #  'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.112:6889',
-   #  'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.160:6889',
-   #  'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.202:6889',
-]
+# Block detection and handling
+TOR_DETECT_BLOCKS = True  
+TOR_BLOCK_RETRY_ATTEMPTS = 3  
+# Port configurations (defaults shown)
+TOR_CONTROL_PORT = 9051     # Tor control port
+TOR_SOCKS_PORT = 9050       # Tor SOCKS5 port  
+TOR_PRIVOXY_PORT = 8118     # Privoxy HTTP proxy port
+TOR_USE_PRIVOXY = True      # Use Privoxy (HTTP) vs direct SOCKS5
