@@ -7,6 +7,9 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
+    tor \
+    privoxy \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY pyproject.toml poetry.lock* ./
@@ -15,6 +18,13 @@ RUN pip install poetry && \
     poetry config virtualenvs.create false && \
     poetry lock && \
     poetry install --no-root
+
+RUN echo "ControlPort 9051" >> /etc/tor/torrc && \
+    echo "CookieAuthentication 0" >> /etc/tor/torrc
+
+RUN echo "forward-socks5t / 127.0.0.1:9050 ." >> /etc/privoxy/config
+
+EXPOSE 9050 8118
 
 # Copy project files
 COPY . .
