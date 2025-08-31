@@ -883,6 +883,17 @@ files = [
 ]
 
 [[package]]
+name = "stem"
+version = "1.8.2"
+description = "Stem is a Python controller library that allows applications to interact with Tor (https://www.torproject.org/)."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "stem-1.8.2.tar.gz", hash = "sha256:83fb19ffd4c9f82207c006051480389f80af221a7e4783000aedec4e384eb582"},
+]
+
+[[package]]
 name = "tldextract"
 version = "5.3.0"
 description = "Accurately separates a URL's subdomain, domain, and public suffix, using the Public Suffix List (PSL). By default, this includes the public ICANN TLDs and their exceptions. You can optionally support the Public Suffix List's private domains as well."
@@ -1053,4 +1064,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "5c62dfe34c502ebff03601c89a2762cf348c2a1dfcc0c759b0dd1ad736688503"
+content-hash = "75b724e43c38c34898f2e2c3295f85535ca179649a75d3fc036c17a7a2598510"
