@@ -26,6 +26,7 @@ class NewProductSpider(RedisSpider):
         
         # Extract all sitemap URLs that contain 'product' in their path
         sitemap_urls = selector.xpath('//sitemap/loc[contains(text(), "product")]/text()').getall()
+        print(f"Found {len(sitemap_urls)} product sitemaps")
         # Make requests to each product sitemap
         for sitemap_url in sitemap_urls:
             yield scrapy.Request(
@@ -37,6 +38,7 @@ class NewProductSpider(RedisSpider):
     
     def parse_product_sitemap(self, response):
         if response.status != 200:
+            print(f"Failed to fetch sitemap: {response.url} (status: {response.status})")
             return
             
         selector = Selector(response)
@@ -46,6 +48,10 @@ class NewProductSpider(RedisSpider):
         
         # Extract all product URLs from the sitemap
         product_urls = selector.xpath('//url/loc/text()').getall()
+        print(f"Found {len(product_urls)} product URLs in {response.url}")
+        
+        if not product_urls:
+            print(f"No product URLs found. Response sample: {response.text[:500]}")
         
         matched_products = 0
         for product_url in product_urls:
@@ -73,6 +79,7 @@ class NewProductSpider(RedisSpider):
                 # Push to Redis with custom key
                 self.server.lpush('snappProduct:first_crawl', json.dumps(request_data))
                 
+        print(f"Matched {matched_products} product URLs and pushed to Redis from {response.url}")
     
     def closed(self, reason):
         print(f"Spider closed with reason: {reason}")
