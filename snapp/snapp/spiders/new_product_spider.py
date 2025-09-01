@@ -1,6 +1,7 @@
 import json
 import scrapy
 import re
+from random import sample
 from scrapy_redis.spiders import RedisSpider
 from scrapy import Selector
 
@@ -37,6 +38,7 @@ class NewProductSpider(RedisSpider):
             )
     
     def parse_product_sitemap(self, response):
+        proxy_list = self.settings.get("ROTATING_PROXY_LIST")
         if response.status != 200:
             print(f"Failed to fetch sitemap: {response.url} (status: {response.status})")
             return
@@ -63,6 +65,11 @@ class NewProductSpider(RedisSpider):
                 # Build the API URL
                 api_url = f"https://apix.snappshop.ir/products/v2/{product_id}?lat=35.77331&lng=51.418591"
                 
+                # Check proxy_list
+                if not proxy_list:
+                    print("Warning: No proxy list found in settings")
+                    continue
+                
                 # Create request data for Redis
                 request_data = {
                     "url": api_url,
@@ -73,6 +80,7 @@ class NewProductSpider(RedisSpider):
                         "number_of_inactivity": 0,
                         "user_like": 0,
                         "user_dislike": 0,
+                        "proxy": sample(proxy_list, 1)[0]
                     }
                 }
                 
