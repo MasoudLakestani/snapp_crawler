@@ -6,8 +6,8 @@ services:
     build: .
     environment:
       - SPIDER_NAME=snappNewProduct
-    # networks:
-    #   - blackeveryday_network
+    networks:
+      - blackeveryday_network
     restart: unless-stopped
 
   # First instance running snappProduct spider
@@ -15,11 +15,11 @@ services:
     build: .
     environment:
       - SPIDER_NAME=snappProduct
-    # networks:
-    #   - blackeveryday_network
+    networks:
+      - blackeveryday_network
     restart: unless-stopped
     deploy:
-      replicas: 10
+      replicas: 2
 
   # Second instance running snappProduct spider
   # snapp-product-2:
@@ -46,6 +46,6 @@ services:
   #     - blackeveryday_network
   #   restart: unless-stopped
 
-# networks:
-#   blackeveryday_network:
-#     external: true
+networks:
+  blackeveryday_network:
+    external: true
