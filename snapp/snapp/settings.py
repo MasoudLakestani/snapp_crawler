@@ -23,7 +23,7 @@ ROBOTSTXT_OBEY = False
 
 # Concurrency and throttling settings
 #CONCURRENT_REQUESTS = 16
-DOWNLOAD_DELAY = 0.5
+DOWNLOAD_DELAY = 1
 
 # Concurrency settings
 CONCURRENT_REQUESTS = 1
@@ -105,8 +105,8 @@ LOG_LEVEL = "ERROR"
 # REDIS_START_URLS_KEY = '%(name)s:start_urls'
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
 DUPEFILTER_CLASS = "snapp.dupefilter.NoDupeFilter"
-REDIS_URL = 'redis://:rv6e7hya18nPA@62.106.95.202:6379'
-# REDIS_URL = 'redis://localhost:6379'
+# REDIS_URL = 'redis://:rv6e7hya18nPA@62.106.95.202:6379'
+REDIS_URL = 'redis://localhost:6379'
 SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.FifoQueue'
 MAX_IDLE_TIME_BEFORE_CLOSE = 3600 * 30
 
@@ -114,23 +114,36 @@ ITEM_PIPELINES = {
    'scrapy_redis.pipelines.RedisPipeline': 200,
 }
 
-# Enable Tor proxy middleware
-DOWNLOADER_MIDDLEWARES = {
-    'snapp.middlewares.TorProxyMiddleware': 585,
-}
+# DOWNLOADER_MIDDLEWARES = {
+#     # ...
+#     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+#     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+#     # ...
+# }'
 
 ## Tor proxy settings
 TOR_PROXY_ENABLED = True
 
-# IP rotation settings
-TOR_PROXY_CHANGE_AFTER = 100
-TOR_PROXY_ALLOW_REUSE_IP_AFTER = 10
+# Optional: Disable other proxy middleware to avoid conflicts
+# HTTPPROXY_ENABLED = False
 
-# Block detection and handling
-TOR_DETECT_BLOCKS = True  
-TOR_BLOCK_RETRY_ATTEMPTS = 3  
-# Port configurations (defaults shown)
-TOR_CONTROL_PORT = 9051     # Tor control port
-TOR_SOCKS_PORT = 9050       # Tor SOCKS5 port  
-TOR_PRIVOXY_PORT = 8118     # Privoxy HTTP proxy port
-TOR_USE_PRIVOXY = True      # Use Privoxy (HTTP) vs direct SOCKS5
+# Recommended: Configure delays to be respectful
+# DOWNLOAD_DELAY = 1
+# RANDOMIZE_DOWNLOAD_DELAY = 0.5
+# AUTOTHROTTLE_ENABLED = True
+# AUTOTHROTTLE_START_DELAY = 1
+# AUTOTHROTTLE_MAX_DELAY = 10
+
+
+ROTATING_PROXY_LIST = [
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.38:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.42:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.56:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.69:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.75:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.92:6889',
+    'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.98:6889',
+   #  'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.112:6889',
+   #  'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.160:6889',
+   #  'http://admin:Ms@r-q2wUD8H!eVW@62.106.95.202:6889',
+]
