@@ -29,24 +29,22 @@ EXPOSE 9050 8118
 # Copy project files
 COPY . .
 
-# Create entrypoint script that starts services
+# Create the entrypoint script based on your working version
 RUN echo '#!/bin/bash\n\
-# Start Tor in the background\n\
-tor &\n\
 \n\
-# Start Privoxy in the background\n\
+echo "Starting Tor..."\n\
+tor --RunAsDaemon 1 --DataDirectory /tmp/tor &\n\
+\n\
+echo "Starting Privoxy..."\n\
 privoxy --no-daemon /etc/privoxy/config &\n\
 \n\
-# Wait a moment for services to start\n\
-sleep 5\n\
+echo "Waiting for services to be ready..."\n\
+sleep 15\n\
 \n\
-# Test connections\n\
 echo "Testing Tor connection..."\n\
-curl --connect-timeout 10 --socks5 127.0.0.1:9050 https://httpbin.org/ip || echo "Tor connection failed"\n\
+curl -x 127.0.0.1:8118 http://icanhazip.com/ || echo "Tor test failed, continuing anyway..."\n\
 \n\
-echo "Testing Privoxy connection..."\n\
-curl --connect-timeout 10 --proxy http://127.0.0.1:8118 https://httpbin.org/ip || echo "Privoxy connection failed"\n\
-\n\
+echo "Starting Scrapy crawler..."\n\
 if [ "$SPIDER_NAME" = "snappNewProduct" ]; then\n\
     cd /app/snapp && scrapy crawl snappNewProduct\n\
 elif [ "$SPIDER_NAME" = "snappProduct" ]; then\n\
