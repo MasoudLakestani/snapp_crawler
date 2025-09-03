@@ -8,7 +8,7 @@ from stem.control import Controller
 
 
 class TorController:
-    """Simple Tor controller that trusts Tor's circuit management."""
+#     """Simple Tor controller that trusts Tor's circuit management."""
     
     def __init__(self, control_port: int = 9051, socks_port: int = 9050):
         self.control_port = control_port
@@ -243,3 +243,59 @@ class BasicTorProxyMiddleware:
     def process_request(self, request, spider):
         request.meta['proxy'] = self.proxy_url
         return None
+
+
+class HighPerformanceProxyMiddleware:
+    """High-performance proxy middleware with fast failover."""
+    
+    def __init__(self):
+        self.proxy_index = 0
+        
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls()
+    
+    def process_request(self, request, spider):
+        """Set proxy with fast failover logic."""
+        proxy_list = spider.settings.get('ROTATING_PROXY_LIST', [])
+        if not proxy_list:
+            return None
+        
+        # Set proxy in request meta (Scrapy way)
+        proxy = proxy_list[self.proxy_index % len(proxy_list)]
+        request.meta['proxy'] = proxy
+        request.meta['download_timeout'] = 1  # 1 second timeout
+        request.meta['request_start_time'] = time.time()
+        
+        self.proxy_index += 1
+        return None
+    
+    def process_exception(self, request, exception, spider):
+        """Handle proxy failures by trying next proxy."""
+        proxy_list = spider.settings.get('ROTATING_PROXY_LIST', [])
+        if not proxy_list:
+            return None
+            
+        current_proxy = request.meta.get('proxy', '')
+        retry_count = request.meta.get('proxy_retry_count', 0)
+        max_retries = len(proxy_list)
+        
+        if retry_count < max_retries:
+            # Try next proxy
+            next_proxy = proxy_list[self.proxy_index % len(proxy_list)]
+            self.proxy_index += 1
+            
+            spider.logger.warning(f"Proxy {current_proxy} failed, trying {next_proxy}")
+            
+            # Create new request with next proxy
+            new_request = request.copy()
+            new_request.meta['proxy'] = next_proxy
+            new_request.meta['proxy_retry_count'] = retry_count + 1
+            new_request.meta['download_timeout'] = 1
+            new_request.meta['request_start_time'] = time.time()
+            new_request.dont_filter = True
+            
+            return new_request
+        else:
+            spider.logger.error(f"All proxies failed for {request.url}")
+            return None

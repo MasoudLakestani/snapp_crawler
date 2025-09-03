@@ -21,13 +21,10 @@ ADDONS = {}
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
-# Concurrency and throttling settings
-#CONCURRENT_REQUESTS = 16
-DOWNLOAD_DELAY = 1
-
-# Concurrency settings
+# Concurrency and throttling settings for 3600 req/hour (1 req/sec)
 CONCURRENT_REQUESTS = 1
 CONCURRENT_REQUESTS_PER_DOMAIN = 1
+DOWNLOAD_DELAY = 1
 
 # Enable AutoThrottle for adaptive speed control
 # AUTOTHROTTLE_ENABLED = True
@@ -93,9 +90,7 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 1
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 
-# Set settings whose default value is deprecated to a future-proof value
-FEED_EXPORT_ENCODING = "utf-8"
-LOG_LEVEL = "ERROR"
+
 
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 # TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
@@ -105,8 +100,8 @@ LOG_LEVEL = "ERROR"
 # REDIS_START_URLS_KEY = '%(name)s:start_urls'
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
 DUPEFILTER_CLASS = "snapp.dupefilter.NoDupeFilter"
-# REDIS_URL = 'redis://:rv6e7hya18nPA@62.106.95.202:6379'
-REDIS_URL = 'redis://localhost:6379'
+REDIS_URL = 'redis://:rv6e7hya18nPA@62.106.95.202:6379'
+# REDIS_URL = 'redis://localhost:6379'
 SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.FifoQueue'
 MAX_IDLE_TIME_BEFORE_CLOSE = 3600 * 30
 
@@ -114,15 +109,12 @@ ITEM_PIPELINES = {
    'scrapy_redis.pipelines.RedisPipeline': 200,
 }
 
-# DOWNLOADER_MIDDLEWARES = {
-#     # ...
-#     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-#     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
-#     # ...
-# }'
+DOWNLOADER_MIDDLEWARES = {
+    'snapp.middlewares.HighPerformanceProxyMiddleware': 350,
+}
 
 ## Tor proxy settings
-TOR_PROXY_ENABLED = True
+TOR_PROXY_ENABLED = False
 
 # Optional: Disable other proxy middleware to avoid conflicts
 # HTTPPROXY_ENABLED = False
